@@ -9,21 +9,33 @@
 
 void increaseSaturation(Mat* srcImage)
 {
-	double alpha = 0.95; /**< Simple contrast control */ //alpha value [1.0-3.0]
-	int beta = -5;  /**< Simple brightness control */ 	//beta value [0-100]
+	double alpha = 0.95; /**< Simple contrast control */
+	int beta = -5;  /**< Simple brightness control */
 
 	for(int y = 0; y < srcImage->rows; y++ )
+	{
 		for(int x = 0; x < srcImage->cols; x++ )
+		{
 			for(int c = 0; c < 3; c++ )
+			{
 				srcImage->at<Vec3b>(y,x)[c] = saturate_cast<uchar>( alpha*( srcImage->at<Vec3b>(y,x)[c] ) + beta );
+			}
+		}
+	}
 }
 
 void blackWhiteIfy(Mat* srcImage)
 {
 	for(int i = 0; i < srcImage->cols; i++)
+	{
 		for(int j = 0; j < srcImage->rows; j++)
+		{
 			if(srcImage->at<uchar>(j, i) > 0)
+			{
 				srcImage->at<uchar>(j, i) = 255;
+			}
+		}
+	}
 }
 
 void CannyThreshold(Mat* srcImage)
@@ -44,30 +56,33 @@ void CannyThreshold(Mat* srcImage)
 
 void readImage(Mat* srcImage, String readImagePath)
 {
+	static const int lowerThreshold = 295;
+	static const int higherThreshold = 305;
 	Mat readImageImg = imread(readImagePath, 1 );
 	if(readImageImg.empty())
 	{
 		std::cout << "Could not open or find the image!" << std::endl;
 		std::cout << "Usage: " << readImagePath << " <Input image>" << std::endl;
-		exit(1);
 	}
-	if (readImageImg.cols < 295
-			|| readImageImg.cols > 305
-			|| readImageImg.rows < 295
-			|| readImageImg.rows > 305)
+	else if (readImageImg.cols < lowerThreshold
+			|| readImageImg.cols > higherThreshold
+			|| readImageImg.rows < lowerThreshold
+			|| readImageImg.rows > higherThreshold)
 	{
 		std::cout << "Wrong size of the image!" << std::endl;
 		std::cout << "Usage: " << readImagePath << " <Input image>" << std::endl;
-		exit(1);
 	}
-	*srcImage = readImageImg;
+	*srcImage = std::move(readImageImg);
 }
 
 void loadImage(Mat* srcImage, String readImagePath)
 {
 	readImage(srcImage, readImagePath);
-	increaseSaturation(srcImage);
-	CannyThreshold(srcImage);
+	if(!srcImage->empty())
+	{
+		increaseSaturation(srcImage);
+		CannyThreshold(srcImage);
+	}
 }
 
 
