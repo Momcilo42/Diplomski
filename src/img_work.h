@@ -20,10 +20,10 @@ void cropOutAlmostEmpty1(Mat* img);
 void cropOutAlmostEmpty0(Mat* img);
 
 //detects inner edge of surrounding circle at given ratio of height
-Point innerCircleH(const Mat* in, float ratio);
+std::pair<int,int>  innerCircleH(const Mat* in, float ratio);
 
 //detects inner edge of surrounding circle at given ratio of width
-Point innerCircleV(const Mat* in, float ratio);
+std::pair<int,int>  innerCircleV(const Mat* in, float ratio);
 
 //checks the horizontal line at given ratio of height for intersecting lines
 vector<int> horizontalScan(const Mat* in, float ratio);
@@ -31,14 +31,13 @@ vector<int> horizontalScan(const Mat* in, float ratio);
 //checks the vertical line at given ratio of width for intersecting lines
 vector<int> verticalScan(const Mat* in, float ratio);
 
-//returns if there are two or more digits
-int getNumberOfDigits(const Mat* in);
-
 //returns the location of the central line going between two digits in two digit number
 int getCentralLine(const Mat* in, int start, int end);
 
-//returns the locations of the central lines going between two digits in three digit number
-Point getCentralLines(const Mat* in);
+//returns position of empty line in the first slot if it detects a two digit number
+//returns positions of empty lines if it detects a three digit number
+//returns -1 in bits slots to signal an error
+std::pair<int,int> getLinesBetweenDigits(const Mat* in);
 
 //removes the parts of the image above and below the digits
 void isolateNumbersV(Mat* srcImage);

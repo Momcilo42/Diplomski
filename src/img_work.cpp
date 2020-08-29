@@ -111,6 +111,8 @@ void cropOutAlmostEmpty(Mat* img)
 	lastEmptyCol2 = cropped.cols;
 	bool breakFlag = false;
 	static const int allowedSidePixels = 9;
+
+	//remove empty lines
 	for(int y = cropped.cols -1; y > cropped.cols/2; y--)
 	{
 		pixelsInLine = 0;
@@ -120,12 +122,38 @@ void cropOutAlmostEmpty(Mat* img)
 			{
 				pixelsInLine++;
 			}
-			if(x < 3 && pixelsInLine > 0)
+		}
+		if(pixelsInLine == 0)
+		{
+			emptyLineCounter++;
+		}
+		if(emptyLineCounter > 1)
+		{
+			lastEmptyCol2 = y;
+		}
+		if(pixelsInLine > 0)
+		{
+			lastEmptyCol2 = y;
+			break;
+		}
+	}
+
+	//compensate for lines on the right side if necessary
+	for(int y = lastEmptyCol2; y > cropped.cols/2; y--)
+	{
+		pixelsInLine = 0;
+		for( int x = 0; x < cropped.rows-1; x++)
+		{
+			if(cropped.at<uchar>(x,y))
+			{
+				pixelsInLine++;
+			}
+			if(pixelsInLine > 0 && x < 3)
 			{
 				breakFlag = true;//because of the sharp corner in picture 70/6
 			}
 		}
-		if(y == cropped.cols -1 && breakFlag)
+		if(y == lastEmptyCol2 && breakFlag)
 		{
 			break;//because of the sharp corner in picture 70/6
 		}
@@ -159,8 +187,6 @@ void cropOutAlmostEmpty1(Mat* img)
 	int emptyLineCounter = 0;
 	int lastEmptyRow1 = 0;
 	int lastEmptyRow2 = img->rows;
-	int lastEmptyCol1 = 0;
-	int lastEmptyCol2 = img->cols;
 
 	static const int allowedVerticalPixels = 10;
 
@@ -252,8 +278,6 @@ void cropOutAlmostEmpty1(Mat* img)
     Mat cropped(*img, Rect(left,lastEmptyRow1,img->cols-left,lastEmptyRow2-lastEmptyRow1));
 
     //SIDES
-	int leftLine = 0;
-	int rightLine = cropped.cols-1;
 	vector<int> lines;
 	vector<int> lengths;
 	int max1 = 0;
@@ -390,8 +414,6 @@ void cropOutAlmostEmpty0(Mat* img)
 	int emptyLineCounter = 0;
 	int lastEmptyRow1 = 0;
 	int lastEmptyRow2 = img->rows;
-	int lastEmptyCol1 = 0;
-	int lastEmptyCol2 = img->cols;
 
 	static const int allowedVerticalPixelsUp = 10;
 	static const int allowedVerticalPixelsDown = 6;
@@ -465,8 +487,6 @@ void cropOutAlmostEmpty0(Mat* img)
     Mat cropped(*img, Rect(0,lastEmptyRow1,img->cols,lastEmptyRow2-lastEmptyRow1));
 
 	//SIDES
-    int leftLine = 0;
-    int rightLine = cropped.cols-1;
     vector<int> linije;
     vector<int> duzine;
 	int max1 = 0;
@@ -561,7 +581,7 @@ void cropOutAlmostEmpty0(Mat* img)
     *img = std::move(cropped2);
 }
 
-Point innerCircleH(const Mat* in, float ratio)
+std::pair<int,int> innerCircleH(const Mat* in, float ratio)
 {
 	int margin = in->cols*0.05;
 	int midHeight = in->rows*ratio;
@@ -589,10 +609,10 @@ Point innerCircleH(const Mat* in, float ratio)
 		}
 		end = point;
 	}
-	return Point(start, end);
+	return std::pair<int,int>(start, end);
 }
 
-Point innerCircleV(const Mat* in, float ratio)
+std::pair<int,int> innerCircleV(const Mat* in, float ratio)
 {
 	int margin = in->rows*0.05;
 	int midWidth = in->cols*ratio;
@@ -624,44 +644,44 @@ Point innerCircleV(const Mat* in, float ratio)
 		end = point;
 	}
 
-	return Point(start, end);
+	return pair<int,int>(start,end) ;
 }
 
 vector<int> horizontalScan(const Mat* in, float ratio)
 {
 	vector<int> points;
-	Point margins = innerCircleH(in, ratio);
+	std::pair<int,int>  margins = innerCircleH(in, ratio);
 	int midHeight = in->rows*ratio;
-	bool linija = false;
-	if(margins.x > in->cols*0.1)
+	bool lineExists = false;
+	if(margins.first > in->cols*0.1)
 	{
-		points.push_back(margins.x);
+		points.push_back(margins.first);
 	}
-	for(int i = margins.x +1; i < margins.y; i++)
+	for(int i = margins.first +1; i < margins.second; i++)
 	{
 		if(in->at<uchar>(midHeight,i) == 0)
 		{
-			linija = false;
+			lineExists = false;
 		}
-		if(in->at<uchar>(midHeight,i) > 0 && i+1 != margins.y)
+		if(in->at<uchar>(midHeight,i) > 0 && i+1 != margins.second)
 		{
-			if(i > margins.x +4
+			if(i > margins.first +4
 					&& in->at<uchar>(midHeight, i) > 0
 					&& in->at<uchar>(midHeight, i-1) > 0
 					&& in->at<uchar>(midHeight, i-2) > 0)
 			{
-				linija = true;
+				lineExists = true;
 			}
 			if(in->at<uchar>(midHeight, i-1) == 0
-					|| (in->at<uchar>(midHeight, i+1) == 0 && linija))
+					|| (in->at<uchar>(midHeight, i+1) == 0 && lineExists))
 			{
 				points.push_back(i);
 			}
 		}
 	}
-	if(margins.y < in->cols*0.9)
+	if(margins.second < in->cols*0.9)
 	{
-		points.push_back(margins.y);
+		points.push_back(margins.second);
 	}
 
 	return points;
@@ -670,30 +690,30 @@ vector<int> horizontalScan(const Mat* in, float ratio)
 vector<int> verticalScan(const Mat* in, float ratio)
 {
 	vector<int> points;
-	Point margins = innerCircleV(in, ratio);
-	margins.x = 0;
-	margins.y = in->rows;
+	std::pair<int,int> margins = innerCircleV(in, ratio);
+	margins.first = 0;
+	margins.second = in->rows;
 	int midWidth = in->cols*ratio;
-	bool linija = false;
-	for(int i = margins.x +1; i < margins.y; i++)
+	bool lineExists = false;
+	for(int i = margins.first +1; i < margins.second; i++)
 	{
 		if(in->at<uchar>(i, midWidth) == 0)
 		{
-			linija = false;
+			lineExists = false;
 		}
 		else
 		{
-			if(in->at<uchar>(i, midWidth) > 0 && i+1 != margins.y)
+			if(in->at<uchar>(i, midWidth) > 0 && i+1 != margins.second)
 			{
-				if(i > margins.x +4
+				if(i > margins.first +4
 						&& in->at<uchar>(i, midWidth) > 0
 						&& in->at<uchar>(i-1, midWidth) > 0
 						&& in->at<uchar>(i-2, midWidth) > 0)
 				{
-					linija = true;
+					lineExists = true;
 				}
 				if(in->at<uchar>(i-1, midWidth) == 0
-						|| (in->at<uchar>(i+1, midWidth) == 0 && linija))
+						|| (in->at<uchar>(i+1, midWidth) == 0 && lineExists))
 				{
 					points.push_back(i);
 				}
@@ -704,15 +724,15 @@ vector<int> verticalScan(const Mat* in, float ratio)
 	return points;
 }
 
-int getCentralLine(const Mat* in, int start, int end)
+int findEmptyLineBetweenThresholds(const Mat* in, int thresholdLow, int thresholdHigh)
 {
 	static const int halfWidth = 50;
 	int found = -1;
-	if(start > halfWidth && end > halfWidth)
+	if(thresholdLow > halfWidth && thresholdHigh > halfWidth)
 	{
 		found = 301; //for the case when checking between the 2 and 3 digit
 	}
-	for(int i = start; i <= end; i++)//it has to be int instead of float because when converting instead of seeing 150 sees 149
+	for(int i = thresholdLow; i <= thresholdHigh; i++)//it has to be int instead of float because when converting instead of seeing 150 sees 149
 	{
 		vector<int> scanLines = verticalScan(in, i/100.0);
 		if(verticalScan(in, i/100.0).size() == 0)
@@ -732,54 +752,49 @@ int getCentralLine(const Mat* in, int start, int end)
 	return found;
 }
 
-int getNumberOfDigits(const Mat* in)
+std::pair<int,int> getLinesBetweenDigits(const Mat* in)
 {
-	int pixelsInLine = 0;
-	int centralLine = 3;//if no line is found, it assumes its a triple digit number
+	std::pair<int,int> retVal;
 
-	static const int lowerWidthThreshold = 44;
-	static const int higherWidthThreshold = 53;
+	static const int lowerWidthThresholdCenter = 44;
+	static const int higherWidthThresholdCenter = 53;
 
-	for(int i = lowerWidthThreshold; i < higherWidthThreshold; i++)
+	//CENTRAL LINE
+	int twoDigitDelimiter = findEmptyLineBetweenThresholds(in, lowerWidthThresholdCenter, higherWidthThresholdCenter);
+
+	if(twoDigitDelimiter != -1)
 	{
-		pixelsInLine = 0;
-		int y = in->cols*i/100.0;
-		for(int x = 0; x < in->rows; x++)
+		retVal.first = twoDigitDelimiter;
+
+		retVal.second = -1;
+	}
+	else
+	{
+		static const int lowerWidthThresholdLeft = 29;
+		static const int higherWidthThresholdLeft = 39;
+
+		static const int lowerWidthThresholdRight = 56;
+		static const int higherWidthThresholdRight = 63;
+
+		//LEFT LINE 1/2
+		retVal.first = findEmptyLineBetweenThresholds(in, lowerWidthThresholdLeft, higherWidthThresholdLeft);
+
+		if(retVal.first == -1)//if it can't find the line between the first two digits it doesn't matter if the line between the second two exists
 		{
-			if(in->at<uchar>(x,y) > 0)
+			retVal.second = -1;
+		}
+		else
+		{
+			//RIGHT LINE 2/3
+			retVal.second = findEmptyLineBetweenThresholds(in, lowerWidthThresholdRight, higherWidthThresholdRight);
+
+			if(retVal.second == -1)//if it can't find the line between the second two digits, resets the first value to signal the error
 			{
-				pixelsInLine++;
+				retVal.first = -1;
 			}
-		}
-		if(pixelsInLine == 0)
-		{
-			centralLine = y;//found empty line between 2 digits, confirming double digit number
-			break;
-		}
-		if(centralLine != 3)
-		{
-			break;
+
 		}
 	}
-
-	return centralLine;
-}
-
-Point getCentralLines(const Mat* in)
-{
-	static const int lowerWidthThresholdLeft = 29;
-	static const int higherWidthThresholdLeft = 39;
-
-	static const int lowerWidthThresholdRight = 56;
-	static const int higherWidthThresholdRight = 63;
-
-	Point retVal;
-
-	//LEFT LINE 1/2
-	retVal.x = getCentralLine(in, lowerWidthThresholdLeft, higherWidthThresholdLeft);
-
-	//RIGHT LINE 2/3
-	retVal.y = getCentralLine(in, lowerWidthThresholdRight, higherWidthThresholdRight);
 
 	return retVal;
 }
@@ -851,25 +866,43 @@ int getNumbers(Mat* srcImage, Mat* digit1, Mat* digit2, Mat* digit3)
 	int leftSide = srcImage->cols;
 	int rightSide = 0;
 	vector<int> lines;
+	bool twoDigits;
 
 	static const float startingPercentage = 0.1;
 	static const float endingPercentage = 0.9;
 	static const float incrementalPercentage = 0.01;
 
 	isolateNumbersV(srcImage);
-	const Mat* newSrc = new Mat(*srcImage);
 
-	int numberOfDigits = getNumberOfDigits(newSrc);
-	if(numberOfDigits != 3)//2 digits
+	std::pair<int,int> linesBetweenDigits = getLinesBetweenDigits(srcImage);
+
+	if(linesBetweenDigits.first == -1)
 	{
-		int middle = numberOfDigits;
+		cout << "Unable to separate numbers" << endl;
+		return 1;
+	}
+	else
+	{
+		if(linesBetweenDigits.second == -1)
+		{
+			twoDigits = true;
+		}
+		else
+		{
+			twoDigits = false;
+		}
+	}
 
-		static const float leftEdge = newSrc->cols*0.15;
-		static const float rightEdge = newSrc->cols*0.87;
+	if(twoDigits)//2 digits
+	{
+		int middle = linesBetweenDigits.first;
+
+		static const float leftEdge = srcImage->cols*0.15;
+		static const float rightEdge = srcImage->cols*0.87;
 
 		for(float mov = startingPercentage; mov <= endingPercentage; mov+=incrementalPercentage)
 		{
-			lines = horizontalScan(newSrc, mov);
+			lines = horizontalScan(srcImage, mov);
 			for(int i = 0; i < lines.size(); i++)
 			{
 				if(lines[i] < leftSide && lines[i] > leftEdge)
@@ -886,38 +919,32 @@ int getNumbers(Mat* srcImage, Mat* digit1, Mat* digit2, Mat* digit3)
 		//LEFT NUMBER
 		right = middle;
 		left = leftSide;
-	    Mat croppedLeft(*newSrc, Rect(left,0,right-left,newSrc->rows));
+	    Mat croppedLeft(*srcImage, Rect(left,0,right-left,srcImage->rows));
 	    cropOutAlmostEmpty(&croppedLeft);
-	    *digit1 = std::move(croppedLeft);
+		*digit1 = std::move(croppedLeft);
 
 		//RIGHT NUMBER
 		right = rightSide;
 		left = middle;
-	    Mat croppedRight(*newSrc, Rect(left,0,right-left,newSrc->rows));
+	    Mat croppedRight(*srcImage, Rect(left,0,right-left,srcImage->rows));
 	    cropOutAlmostEmpty(&croppedRight);
 	    *digit2 = std::move(croppedRight);
 	}
 	else//3 digits
 	{
-		Point centralLines = getCentralLines(newSrc);
-		int middleLeft = centralLines.x;
-		int middleRight = centralLines.y;
-		if(middleLeft == -1 || middleRight == -1)
-		{
-			cout << "Unable to separate numbers" << endl;
-			return 1;
-		}
+		int middleLeft = linesBetweenDigits.first;
+		int middleRight = linesBetweenDigits.second;
 
 		for(float mov = startingPercentage; mov <= endingPercentage; mov+=incrementalPercentage)
 		{
-			lines = horizontalScan(newSrc, mov);
+			lines = horizontalScan(srcImage, mov);
 			for(int i = 0; i < lines.size(); i++)
 			{
-				if(lines[i] < leftSide && lines[i] > newSrc->cols*0.15)
+				if(lines[i] < leftSide && lines[i] > srcImage->cols*0.15)
 				{
 					leftSide = lines[i];
 				}
-				if(lines[i] > rightSide && lines[i] < newSrc->cols*0.90)
+				if(lines[i] > rightSide && lines[i] < srcImage->cols*0.90)
 				{
 					rightSide = lines[i];
 				}
@@ -927,21 +954,21 @@ int getNumbers(Mat* srcImage, Mat* digit1, Mat* digit2, Mat* digit3)
 		//LEFT NUMBER
 		right = middleLeft;
 		left = leftSide -1;//to show the line
-	    Mat croppedLeft(*newSrc, Rect(left,0,right-left,newSrc->rows));
+	    Mat croppedLeft(*srcImage, Rect(left,0,right-left,srcImage->rows));
 	    cropOutAlmostEmpty1(&croppedLeft);
 	    *digit1 = std::move(croppedLeft);
 
 		//CENTER NUMBER
 		right = middleRight;
 		left = middleLeft;
-	    Mat croppedCenter(*newSrc, Rect(left,0,right-left,newSrc->rows));
+	    Mat croppedCenter(*srcImage, Rect(left,0,right-left,srcImage->rows));
 	    cropOutAlmostEmpty(&croppedCenter);
 	    *digit2 = std::move(croppedCenter);
 
 		//RIGHT NUMBER
 		right = rightSide +1;//to show the line
 		left = middleRight;
-	    Mat croppedRight(*newSrc, Rect(left,0,right-left,newSrc->rows));
+	    Mat croppedRight(*srcImage, Rect(left,0,right-left,srcImage->rows));
 	    cropOutAlmostEmpty0(&croppedRight);
 	    *digit3 = std::move(croppedRight);
 	}

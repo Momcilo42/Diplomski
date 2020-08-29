@@ -38,10 +38,7 @@ int main( int argc, char** argv )
 			else
 			{
 				getNumbers(srcImage, digit1, digit2, digit3);
-				const Mat* newDigit1 = new Mat(*digit1);
-				const Mat* newDigit2 = new Mat(*digit2);
-				const Mat* newDigit3 = new Mat(*digit3);
-				detectNumbers(newDigit1, newDigit2, newDigit3);
+				detectNumbers(digit1, digit2, digit3);
 
 				imshow(imageLocation, *srcImage);
 				if(!digit1->empty())
