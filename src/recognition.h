@@ -46,7 +46,10 @@ void detect9(const Mat* digit);
 //detects given numbers
 void numbersToDetect(const Mat* digit);
 
-//detects digits if they exist
-void detectNumbers(const Mat* digit1, const Mat* digit2, const Mat* digit3);
+//writes out detected digit and returns its int value
+int getDetectedDigit();
+
+//detects digits if they exist and returns the number they make
+int detectNumbers(const Mat* digit1, const Mat* digit2, const Mat* digit3);
 
 #endif /* RECOGNITION_H_ */

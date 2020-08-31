@@ -1,20 +1,12 @@
-
-#ifndef DEPENDENCIES
-#define DEPENDENCIES
-
-#include "opencv_dependencies.h"
-
-#endif
-
 #include "img_prep.h"
 #include "img_work.h"
 #include "recognition.h"
 #include "tests.h"
 
-Mat* srcImage = new Mat();
-Mat* digit1 = new Mat();
-Mat* digit2 = new Mat();
-Mat* digit3 = new Mat();
+Mat srcImage;
+Mat digit1;
+Mat digit2;
+Mat digit3;
 
 int main( int argc, char** argv )
 {
@@ -26,32 +18,32 @@ int main( int argc, char** argv )
 		cout << imageLocation << endl;
 		if(!imageLocation.compare("-test"))
 		{
-			testAll(digit1, digit2, digit3);
+			testAll(&digit1, &digit2, &digit3);
 		}
 		else
 		{
-			loadImage(srcImage, imageLocation);
-			if(srcImage->empty())
+			loadImage(&srcImage, imageLocation);
+			if(srcImage.empty())
 			{
 				cout << "Error with image" << endl;
 			}
 			else
 			{
-				getNumbers(srcImage, digit1, digit2, digit3);
-				detectNumbers(digit1, digit2, digit3);
+				getNumbers(&srcImage, &digit1, &digit2, &digit3);
+				detectNumbers(&digit1, &digit2, &digit3);
 
-				imshow(imageLocation, *srcImage);
-				if(!digit1->empty())
+				imshow(imageLocation, srcImage);
+				if(!digit1.empty())
 				{
-					imshow("digit1 "+imageLocation, *digit1);
+					imshow("digit1 "+imageLocation, digit1);
 				}
-				if(!digit2->empty())
+				if(!digit2.empty())
 				{
-					imshow("digit2 "+imageLocation, *digit2);
+					imshow("digit2 "+imageLocation, digit2);
 				}
-				if(!digit3->empty())
+				if(!digit3.empty())
 				{
-					imshow("digit3 "+imageLocation, *digit3);
+					imshow("digit3 "+imageLocation, digit3);
 				}
 			}
 		}

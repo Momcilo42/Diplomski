@@ -1,4 +1,5 @@
-src/main.o: ../src/main.cpp ../src/opencv_dependencies.h \
+src/main.o: ../src/main.cpp ../src/img_prep.h \
+ ../src/opencv_dependencies.h \
  /usr/local/include/opencv4/opencv2/imgproc.hpp \
  /usr/local/include/opencv4/opencv2/core.hpp \
  /usr/local/include/opencv4/opencv2/core/cvdef.h \
@@ -32,8 +33,10 @@ src/main.o: ../src/main.cpp ../src/opencv_dependencies.h \
  /usr/local/include/opencv4/opencv2/videoio.hpp \
  /usr/local/include/opencv4/opencv2/imgproc/types_c.h \
  /usr/local/include/opencv4/opencv2/core/core_c.h \
- /usr/local/include/opencv4/opencv2/core/types_c.h ../src/img_prep.h \
- ../src/img_work.h ../src/recognition.h ../src/tests.h
+ /usr/local/include/opencv4/opencv2/core/types_c.h ../src/img_work.h \
+ ../src/recognition.h ../src/tests.h
+
+../src/img_prep.h:
 
 ../src/opencv_dependencies.h:
 
@@ -104,8 +107,6 @@ src/main.o: ../src/main.cpp ../src/opencv_dependencies.h \
 /usr/local/include/opencv4/opencv2/core/core_c.h:
 
 /usr/local/include/opencv4/opencv2/core/types_c.h:
-
-../src/img_prep.h:
 
 ../src/img_work.h:
 

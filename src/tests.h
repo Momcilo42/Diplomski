@@ -28,7 +28,7 @@ void test60Lines(Mat in);
 void test80Lines(Mat in);
 
 //selects functions to test
-void testSelectedFunctions(Mat* inp, Mat* num1, Mat* num2, Mat* num3);
+int testSelectedFunctions(Mat* inp, Mat* num1, Mat* num2, Mat* num3);
 
 //tests 65 preselected images to speed up testing
 void testAll(Mat* num1, Mat* num2, Mat* num3);
