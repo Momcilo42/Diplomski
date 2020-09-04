@@ -3,6 +3,9 @@
 #include "recognition.h"
 #include "tests.h"
 
+using namespace std;
+using namespace cv;
+
 Mat srcImage;
 Mat digit1;
 Mat digit2;
@@ -29,7 +32,7 @@ int main( int argc, char** argv )
 			}
 			else
 			{
-				getNumbers(&srcImage, &digit1, &digit2, &digit3);
+				getDigits(&srcImage, &digit1, &digit2, &digit3);
 				detectNumbers(&digit1, &digit2, &digit3);
 
 				imshow(imageLocation, srcImage);

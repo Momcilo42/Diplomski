@@ -7,6 +7,8 @@
 
 #include "recognition.h"
 
+using namespace cv;
+
 bool digitDetected = false;
 bool detected0 = false;
 bool detected1 = false;
@@ -20,6 +22,12 @@ bool detected8 = false;
 bool detected9 = false;
 
 static int digitToDetect = 0;
+
+static const int firstDigitOfTwoDigitNumber = -1;
+static const int secondDigitOfTwoDigitNumber = -2;
+static const int firstDigitOfThreeDigitNumber = 1;
+static const int secondDigitOfThreeDigitNumber = 2;
+static const int thirdDigitOfThreeDigitNumber = 3;
 
 static const float threshold1 = 2.45;
 
@@ -253,7 +261,7 @@ void numbersToDetect(const Mat* digit)
 {
 	switch(digitToDetect)
 	{
-		case -1:
+		case firstDigitOfThreeDigitNumber:
 		{
 			detect0(digit);
 			if(digitDetected)
@@ -267,8 +275,8 @@ void numbersToDetect(const Mat* digit)
 			}
 		}
 		break;
-		case 2:
-		case 3:
+		case secondDigitOfTwoDigitNumber:
+		case thirdDigitOfThreeDigitNumber:
 		{
 			detect0(digit);
 			if(digitDetected)
@@ -282,8 +290,8 @@ void numbersToDetect(const Mat* digit)
 			}
 		}
 		break;
-		case -2:
-		case 1:
+		case secondDigitOfThreeDigitNumber:
+		case firstDigitOfTwoDigitNumber:
 		default:
 		{
 			detect0(digit);
@@ -338,83 +346,81 @@ void numbersToDetect(const Mat* digit)
 
 int getDetectedDigit()
 {
+	int detectedDigit = -1;
 	if(digitDetected)
 	{
 		if(detected0)
 		{
-			cout << "0";
+			std::cout << "0";
 			detected0 = false;
 			digitDetected = false;
-			return 0;
+			detectedDigit = 0;
 		}
 		else if(detected1)
 		{
-			cout << "1";
+			std::cout << "1";
 			detected1 = false;
 			digitDetected = false;
-			return 1;
+			detectedDigit = 1;
 		}
 		else if(detected2)
 		{
-			cout << "2";
+			std::cout << "2";
 			detected2 = false;
 			digitDetected = false;
-			return 2;
+			detectedDigit = 2;
 		}
 		else if(detected3)
 		{
-			cout << "3";
+			std::cout << "3";
 			detected3 = false;
 			digitDetected = false;
-			return 3;
+			detectedDigit = 3;
 		}
 		else if(detected4)
 		{
-			cout << "4";
+			std::cout << "4";
 			detected4 = false;
 			digitDetected = false;
-			return 4;
+			detectedDigit = 4;
 		}
 		else if(detected5)
 		{
-			cout << "5";
+			std::cout << "5";
 			detected5 = false;
 			digitDetected = false;
-			return 5;
+			detectedDigit = 5;
 		}
 		else if(detected6)
 		{
-			cout << "6";
+			std::cout << "6";
 			detected6 = false;
 			digitDetected = false;
-			return 6;
+			detectedDigit = 6;
 		}
 		else if(detected7)
 		{
-			cout << "7";
+			std::cout << "7";
 			detected7 = false;
 			digitDetected = false;
-			return 7;
+			detectedDigit = 7;
 		}
 		else if(detected8)
 		{
-			cout << "8";
+			std::cout << "8";
 			detected8 = false;
 			digitDetected = false;
-			return 8;
+			detectedDigit = 8;
 		}
 		else if(detected9)
 		{
-			cout << "9";
+			std::cout << "9";
 			detected9 = false;
 			digitDetected = false;
-			return 9;
+			detectedDigit = 9;
 		}
 	}
-	else
-	{
-		return -1;
-	}
+	return detectedDigit;
 }
 
 int detectNumbers(const Mat* digit1, const Mat* digit2, const Mat* digit3)
@@ -423,18 +429,18 @@ int detectNumbers(const Mat* digit1, const Mat* digit2, const Mat* digit3)
 
 	if(!digit1->empty())
 	{
-		cout<<"Digit1=";
+		std::cout<<"Digit1=";
 		if(!digit3->empty())
 		{
-			digitToDetect = -1;//3 digit number
+			digitToDetect = firstDigitOfThreeDigitNumber;//3 digit number
 		}
 		else
 		{
-			digitToDetect = 1;//2 digit number
+			digitToDetect = firstDigitOfTwoDigitNumber;//2 digit number
 		}
 		numbersToDetect(digit1);
 		int temp = getDetectedDigit();
-		cout << endl;
+		std::cout << std::endl;
 		if(temp != -1)
 		{
 			number = temp;
@@ -442,18 +448,18 @@ int detectNumbers(const Mat* digit1, const Mat* digit2, const Mat* digit3)
 	}
 	if(!digit2->empty())
 	{
-		cout<<"Digit2=";
+		std::cout<<"Digit2=";
 		if(!digit3->empty())
 		{
-			digitToDetect = -2;//3 digit number
+			digitToDetect = secondDigitOfThreeDigitNumber;//3 digit number
 		}
 		else
 		{
-			digitToDetect = 2;//2 digit number
+			digitToDetect = secondDigitOfTwoDigitNumber;//2 digit number
 		}
 		numbersToDetect(digit2);
 		int temp = getDetectedDigit();
-		cout << endl;
+		std::cout << std::endl;
 		if(temp != -1)
 		{
 			number = number*10+temp;
@@ -461,11 +467,11 @@ int detectNumbers(const Mat* digit1, const Mat* digit2, const Mat* digit3)
 	}
 	if(!digit3->empty())
 	{
-		cout<<"Digit3=";
-		digitToDetect = 3;
+		std::cout<<"Digit3=";
+		digitToDetect = thirdDigitOfThreeDigitNumber;
 		numbersToDetect(digit3);
 		int temp = getDetectedDigit();
-		cout << endl;
+		std::cout << std::endl;
 		if(temp != -1)
 		{
 			number = number*10+temp;

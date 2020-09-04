@@ -7,6 +7,10 @@
 
 #include "img_prep.h"
 
+using namespace cv;
+
+String sas;
+
 void increaseSaturation(Mat* srcImage)
 {
 	double alpha = 0.95; /**< Simple contrast control */

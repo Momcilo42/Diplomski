@@ -7,12 +7,15 @@
 
 #include "tests.h"
 
+using namespace std;
+using namespace cv;
+
 static int numOfTests = 0;
 static int correctTests = 0;
 
 int testSelectedFunctions(Mat* inp, Mat* num1, Mat* num2, Mat* num3)
 {
-	getNumbers(inp, num1, num2, num3);
+	getDigits(inp, num1, num2, num3);
 	return detectNumbers(num1, num2, num3);
 }
 

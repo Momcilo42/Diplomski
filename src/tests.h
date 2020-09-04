@@ -10,27 +10,24 @@
 
 #include "img_prep.h"
 #include "img_work.h"
-#include "opencv_dependencies.h"
 #include "recognition.h"
 
-//#include "znakovi.cpp"
-
 //tests lines going through the image
-void testScan(Mat in);
+void testScan(cv::Mat in);
 
 //tests selected lines to see where 30s fit in
-void test30Lines(Mat in);
+void test30Lines(cv::Mat in);
 
 //tests selected lines to see where 60s fit in
-void test60Lines(Mat in);
+void test60Lines(cv::Mat in);
 
 //tests selected lines to see where 80s fit in
-void test80Lines(Mat in);
+void test80Lines(cv::Mat in);
 
 //selects functions to test
-int testSelectedFunctions(Mat* inp, Mat* num1, Mat* num2, Mat* num3);
+int testSelectedFunctions(cv::Mat* inp, cv::Mat* num1, cv::Mat* num2, cv::Mat* num3);
 
 //tests 65 preselected images to speed up testing
-void testAll(Mat* num1, Mat* num2, Mat* num3);
+void testAll(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3);
 
 #endif /* TESTS_H_ */

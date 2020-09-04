@@ -7,6 +7,10 @@
 
 #include "img_prep.h"
 #include "img_work.h"
+#include <algorithm>		//for swap
+
+using namespace std;
+using namespace cv;
 
 void cropOutAlmostEmpty(Mat* img)
 {
@@ -309,7 +313,7 @@ void cropOutAlmostEmpty1(Mat* img)
 	}
 
 	//remove adjacent lines
-	for(int i = 1; i < lines.size(); i++)
+	for(int i = 1; i < (int)lines.size(); i++)
 	{
 		if(lines[i] == lines[i-1]
 			|| lines[i] == lines[i-1]+1)
@@ -330,7 +334,7 @@ void cropOutAlmostEmpty1(Mat* img)
 	}
 
 	//find 2 longest lines
-	for(int i = 0; i < lines.size(); i++)
+	for(int i = 0; i < (int)lines.size(); i++)
 	{
 		if(lengths[i] > max1)
 		{
@@ -348,8 +352,8 @@ void cropOutAlmostEmpty1(Mat* img)
 	//line1/max1 leftmost line
 	if(line2 < line1)
 	{
-		std::swap(line1, line2);
-		std::swap(max1, max2);
+		swap(line1, line2); // @suppress("Invalid arguments")
+		swap(max1, max2);	// @suppress("Invalid arguments")
 	}
 
 	//find nearest lines
@@ -489,8 +493,6 @@ void cropOutAlmostEmpty0(Mat* img)
 	//SIDES
     vector<int> linije;
     vector<int> duzine;
-	int max1 = 0;
-	int max2 = 0;
 	int line1 = 1;
 	int line2 = cropped.cols-1;
 
@@ -519,7 +521,7 @@ void cropOutAlmostEmpty0(Mat* img)
 	}
 
     //remove adjacent lines
-	for(int i = 1; i < linije.size(); i++)
+	for(int i = 1; i < (int)linije.size(); i++)
 	{
 		if(linije[i] == linije[i-1]
 			|| linije[i] == linije[i-1]+1)
@@ -541,7 +543,7 @@ void cropOutAlmostEmpty0(Mat* img)
 
 	//find longest line
 	int maxLength = 0;
-	for(int i = 0; i < linije.size()-1; i++)
+	for(int i = 0; i < (int)linije.size()-1; i++)
 	{
 		if(duzine[i] > maxLength)
 		{
@@ -557,18 +559,16 @@ void cropOutAlmostEmpty0(Mat* img)
 	int comp = maxLength>comparativeLength?higherThreshold:lowerThreshold;
 
 	//find 4 longest lines to get the first and last as edges
-	for(int i = 0; i < linije.size(); i++)
+	for(int i = 0; i < (int)linije.size(); i++)
 	{
 		if(duzine[i] >= comp && counter < 4)
 		{
 			if(counter == 0)
 			{
-				max1 = duzine[i];
 				line1 = linije[i];
 			}
 			else if(counter == 3)
 			{
-				max2 = duzine[i];
 				line2 = linije[i] +1;//to show the last line
 				break;
 			}
@@ -735,7 +735,7 @@ int findEmptyLineBetweenThresholds(const Mat* in, int thresholdLow, int threshol
 	for(int i = thresholdLow; i <= thresholdHigh; i++)//it has to be int instead of float because when converting instead of seeing 150 sees 149
 	{
 		vector<int> scanLines = verticalScan(in, i/100.0);
-		if(verticalScan(in, i/100.0).size() == 0)
+		if(scanLines.size() == 0)
 		{
 			if((in->cols*i/100 >= in->cols/2 && in->cols*i/100 < found)
 					|| (in->cols*i/100 <= in->cols/2 && in->cols*i/100 > found))
@@ -855,7 +855,7 @@ void isolateNumbersV(Mat* srcImage)
 	*srcImage = std::move(cropped);
 }
 
-int getNumbers(Mat* srcImage, Mat* digit1, Mat* digit2, Mat* digit3)
+int getDigits(Mat* srcImage, Mat* digit1, Mat* digit2, Mat* digit3)
 {
 	digit1->release();
 	digit2->release();
@@ -903,7 +903,7 @@ int getNumbers(Mat* srcImage, Mat* digit1, Mat* digit2, Mat* digit3)
 		for(float mov = startingPercentage; mov <= endingPercentage; mov+=incrementalPercentage)
 		{
 			lines = horizontalScan(srcImage, mov);
-			for(int i = 0; i < lines.size(); i++)
+			for(int i = 0; i < (int)lines.size(); i++)
 			{
 				if(lines[i] < leftSide && lines[i] > leftEdge)
 				{
@@ -938,7 +938,7 @@ int getNumbers(Mat* srcImage, Mat* digit1, Mat* digit2, Mat* digit3)
 		for(float mov = startingPercentage; mov <= endingPercentage; mov+=incrementalPercentage)
 		{
 			lines = horizontalScan(srcImage, mov);
-			for(int i = 0; i < lines.size(); i++)
+			for(int i = 0; i < (int)lines.size(); i++)
 			{
 				if(lines[i] < leftSide && lines[i] > srcImage->cols*0.15)
 				{

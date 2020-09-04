@@ -8,48 +8,49 @@
 #ifndef RECOGNITION_H_
 #define RECOGNITION_H_
 
-#include "opencv_dependencies.h"
+#include <iostream>						//cout
+#include "opencv2/core.hpp"				//Mat
 
 //counts non black pixels in given area
-int countInArea(const Mat* inputDigit, Point p1, Point p2);
+int countInArea(const cv::Mat* inputDigit, cv::Point p1, cv::Point p2);
 
 //detects presence of 0
-void detect0(const Mat* digit);
+void detect0(const cv::Mat* digit);
 
 //detects presence of 1
-void detect1(const Mat* digit);
+void detect1(const cv::Mat* digit);
 
 //detects presence of 2
-void detect2(const Mat* digit);
+void detect2(const cv::Mat* digit);
 
 //detects presence of 3
-void detect3(const Mat* digit);
+void detect3(const cv::Mat* digit);
 
 //detects presence of 4
-void detect4(const Mat* digit);
+void detect4(const cv::Mat* digit);
 
 //detects presence of 5
-void detect5(const Mat* digit);
+void detect5(const cv::Mat* digit);
 
 //detects presence of 6
-void detect6(const Mat* digit);
+void detect6(const cv::Mat* digit);
 
 //detects presence of 7
-void detect7(const Mat* digit);
+void detect7(const cv::Mat* digit);
 
 //detects presence of 8
-void detect8(const Mat* digit);
+void detect8(const cv::Mat* digit);
 
 //detects presence of 9
-void detect9(const Mat* digit);
+void detect9(const cv::Mat* digit);
 
 //detects given numbers
-void numbersToDetect(const Mat* digit);
+void numbersToDetect(const cv::Mat* digit);
 
 //writes out detected digit and returns its int value
 int getDetectedDigit();
 
 //detects digits if they exist and returns the number they make
-int detectNumbers(const Mat* digit1, const Mat* digit2, const Mat* digit3);
+int detectNumbers(const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* digit3);
 
 #endif /* RECOGNITION_H_ */
