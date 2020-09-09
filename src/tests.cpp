@@ -6,33 +6,35 @@
  */
 
 #include "tests.h"
-
-using namespace std;
-using namespace cv;
+#include "img_prep.h"
+#include "img_work.h"
+#include "recognition.h"
+#include <iostream>						//cout
+#include "opencv2/highgui.hpp"			//imshow
 
 static int numOfTests = 0;
 static int correctTests = 0;
 
-int testSelectedFunctions(Mat* inp, Mat* num1, Mat* num2, Mat* num3)
+int testSelectedFunctions(cv::Mat* inp, cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
 	getDigits(inp, num1, num2, num3);
 	return detectNumbers(num1, num2, num3);
 }
 
-void testImageReferance(Mat* num1, Mat* num2, Mat* num3)
+void testImageReferance(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of References <==================================" << endl;
+	std::cout << "Checking Images of References <==================================" << std::endl;
 
 	//reference
 	path = "images/30.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "Regular 30" << endl;
+	std::cout << "Regular 30" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 30)
@@ -43,7 +45,7 @@ void testImageReferance(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/60.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "Regular 60" << endl;
+	std::cout << "Regular 60" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 60)
@@ -54,7 +56,7 @@ void testImageReferance(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/80.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "Regular 80" << endl;
+	std::cout << "Regular 80" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 80)
@@ -66,7 +68,7 @@ void testImageReferance(Mat* num1, Mat* num2, Mat* num3)
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "Regular 130" << endl;
+	std::cout << "Regular 130" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 130)
@@ -77,20 +79,20 @@ void testImageReferance(Mat* num1, Mat* num2, Mat* num3)
 	imshow("Regular", help1);
 }
 
-void testImages15(Mat* num1, Mat* num2, Mat* num3)
+void testImages15(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 15 <===========================================" << endl;
+	std::cout << "Checking Images of 15 <===========================================" << std::endl;
 
 	//15
 	path = "images/15/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "15/1" << endl;
+	std::cout << "15/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 15)
@@ -101,7 +103,7 @@ void testImages15(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/15/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "15/2" << endl;
+	std::cout << "15/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 15)
@@ -112,7 +114,7 @@ void testImages15(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/15/3.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "15/3" << endl;
+	std::cout << "15/3" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 15)
@@ -123,20 +125,20 @@ void testImages15(Mat* num1, Mat* num2, Mat* num3)
 	imshow("15",help1);
 }
 
-void testImages25(Mat* num1, Mat* num2, Mat* num3)
+void testImages25(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 25 <===========================================" << endl;
+	std::cout << "Checking Images of 25 <===========================================" << std::endl;
 
 	//25
 	path = "images/25/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "25/1" << endl;
+	std::cout << "25/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 25)
@@ -147,7 +149,7 @@ void testImages25(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/25/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "25/2" << endl;
+	std::cout << "25/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 25)
@@ -158,20 +160,20 @@ void testImages25(Mat* num1, Mat* num2, Mat* num3)
 	imshow("25",help1);
 }
 
-void testImages30(Mat* num1, Mat* num2, Mat* num3)
+void testImages30(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 30 <===========================================" << endl;
+	std::cout << "Checking Images of 30 <===========================================" << std::endl;
 
 	//30
 	path = "images/30/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "30/1" << endl;
+	std::cout << "30/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 30)
@@ -182,7 +184,7 @@ void testImages30(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/30/2a.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "30/2a" << endl;
+	std::cout << "30/2a" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 30)
@@ -193,7 +195,7 @@ void testImages30(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/30/3a.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "30/3a" << endl;
+	std::cout << "30/3a" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 30)
@@ -204,7 +206,7 @@ void testImages30(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/30/4a.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "30/4a" << endl;
+	std::cout << "30/4a" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 30)
@@ -215,7 +217,7 @@ void testImages30(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/30/5.jpeg";
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
-	cout << "30/5" << endl;
+	std::cout << "30/5" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 30)
@@ -227,7 +229,7 @@ void testImages30(Mat* num1, Mat* num2, Mat* num3)
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "30/6" << endl;
+	std::cout << "30/6" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 30)
@@ -238,20 +240,20 @@ void testImages30(Mat* num1, Mat* num2, Mat* num3)
 	imshow("30", help1);
 }
 
-void testImages40(Mat* num1, Mat* num2, Mat* num3)
+void testImages40(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 40 <===========================================" << endl;
+	std::cout << "Checking Images of 40 <===========================================" << std::endl;
 
 	//40
 	path = "images/40/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "40/1" << endl;
+	std::cout << "40/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 40)
@@ -262,7 +264,7 @@ void testImages40(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/40/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "40/2" << endl;
+	std::cout << "40/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 40)
@@ -273,7 +275,7 @@ void testImages40(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/40/3.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "40/3" << endl;
+	std::cout << "40/3" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 40)
@@ -285,7 +287,7 @@ void testImages40(Mat* num1, Mat* num2, Mat* num3)
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "40/4" << endl;
+	std::cout << "40/4" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 40)
@@ -296,20 +298,20 @@ void testImages40(Mat* num1, Mat* num2, Mat* num3)
 	imshow("40", help1);
 }
 
-void testImages50(Mat* num1, Mat* num2, Mat* num3)
+void testImages50(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 50 <===========================================" << endl;
+	std::cout << "Checking Images of 50 <===========================================" << std::endl;
 
 	//50
 	path = "images/50/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "50/1" << endl;
+	std::cout << "50/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 50)
@@ -320,7 +322,7 @@ void testImages50(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/50/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "50/2" << endl;
+	std::cout << "50/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 50)
@@ -331,7 +333,7 @@ void testImages50(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/50/3.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "50/3" << endl;
+	std::cout << "50/3" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 50)
@@ -342,7 +344,7 @@ void testImages50(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/50/4.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "50/4" << endl;
+	std::cout << "50/4" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 50)
@@ -353,7 +355,7 @@ void testImages50(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/50/5.jpeg";
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
-	cout << "50/5" << endl;
+	std::cout << "50/5" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 50)
@@ -365,7 +367,7 @@ void testImages50(Mat* num1, Mat* num2, Mat* num3)
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "50/6" << endl;
+	std::cout << "50/6" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 50)
@@ -376,20 +378,20 @@ void testImages50(Mat* num1, Mat* num2, Mat* num3)
 	imshow("50", help1);
 }
 
-void testImages60(Mat* num1, Mat* num2, Mat* num3)
+void testImages60(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 60 <===========================================" << endl;
+	std::cout << "Checking Images of 60 <===========================================" << std::endl;
 
 	//60
 	path = "images/60/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "60/1" << endl;
+	std::cout << "60/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 60)
@@ -400,7 +402,7 @@ void testImages60(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/60/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "60/2" << endl;
+	std::cout << "60/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 60)
@@ -411,7 +413,7 @@ void testImages60(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/60/3.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "60/3" << endl;
+	std::cout << "60/3" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 60)
@@ -422,7 +424,7 @@ void testImages60(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/60/4.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "60/4" << endl;
+	std::cout << "60/4" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 60)
@@ -433,7 +435,7 @@ void testImages60(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/60/5.jpeg";
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
-	cout << "60/5" << endl;
+	std::cout << "60/5" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 60)
@@ -445,7 +447,7 @@ void testImages60(Mat* num1, Mat* num2, Mat* num3)
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "60/6" << endl;
+	std::cout << "60/6" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 60)
@@ -456,20 +458,20 @@ void testImages60(Mat* num1, Mat* num2, Mat* num3)
 	imshow("60", help1);
 }
 
-void testImages70(Mat* num1, Mat* num2, Mat* num3)
+void testImages70(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 70 <===========================================" << endl;
+	std::cout << "Checking Images of 70 <===========================================" << std::endl;
 
 	//70
 	path = "images/70/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "70/1" << endl;
+	std::cout << "70/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 70)
@@ -480,7 +482,7 @@ void testImages70(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/70/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "70/2" << endl;
+	std::cout << "70/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 70)
@@ -491,7 +493,7 @@ void testImages70(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/70/3.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "70/3" << endl;
+	std::cout << "70/3" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 70)
@@ -502,7 +504,7 @@ void testImages70(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/70/4.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "70/4" << endl;
+	std::cout << "70/4" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 70)
@@ -513,7 +515,7 @@ void testImages70(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/70/5.jpeg";
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
-	cout << "70/5" << endl;
+	std::cout << "70/5" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 70)
@@ -525,7 +527,7 @@ void testImages70(Mat* num1, Mat* num2, Mat* num3)
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "70/6" << endl;
+	std::cout << "70/6" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 70)
@@ -536,20 +538,20 @@ void testImages70(Mat* num1, Mat* num2, Mat* num3)
 	imshow("70", help1);
 }
 
-void testImages80(Mat* num1, Mat* num2, Mat* num3)
+void testImages80(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 80 <===========================================" << endl;
+	std::cout << "Checking Images of 80 <===========================================" << std::endl;
 
 	//80
 	path = "images/80/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "80/1" << endl;
+	std::cout << "80/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 80)
@@ -560,7 +562,7 @@ void testImages80(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/80/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "80/2" << endl;
+	std::cout << "80/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 80)
@@ -571,7 +573,7 @@ void testImages80(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/80/2a.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "80/2a" << endl;
+	std::cout << "80/2a" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 80)
@@ -583,7 +585,7 @@ void testImages80(Mat* num1, Mat* num2, Mat* num3)
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "80/2aa" << endl;
+	std::cout << "80/2aa" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 80)
@@ -594,20 +596,20 @@ void testImages80(Mat* num1, Mat* num2, Mat* num3)
 	imshow("80", help1);
 }
 
-void testImages90(Mat* num1, Mat* num2, Mat* num3)
+void testImages90(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 90 <===========================================" << endl;
+	std::cout << "Checking Images of 90 <===========================================" << std::endl;
 
 	//90
 	path = "images/90/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "90/1" << endl;
+	std::cout << "90/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 90)
@@ -618,7 +620,7 @@ void testImages90(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/90/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "90/2" << endl;
+	std::cout << "90/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 90)
@@ -629,7 +631,7 @@ void testImages90(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/90/3.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "90/3" << endl;
+	std::cout << "90/3" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 90)
@@ -640,7 +642,7 @@ void testImages90(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/90/4.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "90/4" << endl;
+	std::cout << "90/4" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 90)
@@ -651,7 +653,7 @@ void testImages90(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/90/5.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "90/5" << endl;
+	std::cout << "90/5" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 90)
@@ -662,7 +664,7 @@ void testImages90(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/90/6.jpeg";
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
-	cout << "90/6" << endl;
+	std::cout << "90/6" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 90)
@@ -673,7 +675,7 @@ void testImages90(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/90/7.jpeg";
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
-	cout << "90/7" << endl;
+	std::cout << "90/7" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 90)
@@ -685,7 +687,7 @@ void testImages90(Mat* num1, Mat* num2, Mat* num3)
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "90/8" << endl;
+	std::cout << "90/8" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 90)
@@ -696,20 +698,20 @@ void testImages90(Mat* num1, Mat* num2, Mat* num3)
 	imshow("90", help1);
 }
 
-void testImages100(Mat* num1, Mat* num2, Mat* num3)
+void testImages100(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 100 <==========================================" << endl;
+	std::cout << "Checking Images of 100 <==========================================" << std::endl;
 
 	//100
 	path = "images/100/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "100/1" << endl;
+	std::cout << "100/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 100)
@@ -720,7 +722,7 @@ void testImages100(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/100/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "100/2" << endl;
+	std::cout << "100/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 100)
@@ -731,7 +733,7 @@ void testImages100(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/100/3.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "100/3" << endl;
+	std::cout << "100/3" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 100)
@@ -742,7 +744,7 @@ void testImages100(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/100/5.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "100/5" << endl;
+	std::cout << "100/5" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 100)
@@ -753,7 +755,7 @@ void testImages100(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/100/6.jpeg";
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
-	cout << "100/6" << endl;
+	std::cout << "100/6" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 100)
@@ -766,7 +768,7 @@ void testImages100(Mat* num1, Mat* num2, Mat* num3)
 
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "100/7" << endl;
+	std::cout << "100/7" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 100)
@@ -777,20 +779,20 @@ void testImages100(Mat* num1, Mat* num2, Mat* num3)
 	imshow("100", help1);
 }
 
-void testImages120(Mat* num1, Mat* num2, Mat* num3)
+void testImages120(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 120 <==========================================" << endl;
+	std::cout << "Checking Images of 120 <==========================================" << std::endl;
 
 	//120
 	path = "images/120/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "120/1" << endl;
+	std::cout << "120/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 120)
@@ -801,7 +803,7 @@ void testImages120(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/120/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "120/2" << endl;
+	std::cout << "120/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 120)
@@ -812,7 +814,7 @@ void testImages120(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/120/3.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "120/3" << endl;
+	std::cout << "120/3" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 120)
@@ -823,7 +825,7 @@ void testImages120(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/120/5.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "120/5" << endl;
+	std::cout << "120/5" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 120)
@@ -834,7 +836,7 @@ void testImages120(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/120/4.jpeg";
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
-	cout << "120/4" << endl;
+	std::cout << "120/4" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 120)
@@ -846,7 +848,7 @@ void testImages120(Mat* num1, Mat* num2, Mat* num3)
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "120/7" << endl;
+	std::cout << "120/7" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 120)
@@ -857,20 +859,20 @@ void testImages120(Mat* num1, Mat* num2, Mat* num3)
 	imshow("120", help1);
 }
 
-void testImages130(Mat* num1, Mat* num2, Mat* num3)
+void testImages130(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
-	Mat temp;
-	Mat help1, help2;
-	String path;
+	cv::Mat temp;
+	cv::Mat help1, help2;
+	cv::String path;
 	int detectedNumber;
 
-	cout << "Checking Images of 130 <==========================================" << endl;
+	std::cout << "Checking Images of 130 <==========================================" << std::endl;
 
 	//130
 	path = "images/130/1.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help1);
-	cout << "130/1" << endl;
+	std::cout << "130/1" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 130)
@@ -881,7 +883,7 @@ void testImages130(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/130/2.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "130/2" << endl;
+	std::cout << "130/2" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 130)
@@ -892,7 +894,7 @@ void testImages130(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/130/3.jpeg";
 	loadImage(&temp, path);
 	hconcat(help1, temp, help1);
-	cout << "130/3" << endl;
+	std::cout << "130/3" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 130)
@@ -903,7 +905,7 @@ void testImages130(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/130/4.jpeg";
 	loadImage(&temp, path);
 	temp.copyTo(help2);
-	cout << "130/4" << endl;
+	std::cout << "130/4" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 130)
@@ -914,7 +916,7 @@ void testImages130(Mat* num1, Mat* num2, Mat* num3)
 	path = "images/130/5.jpeg";
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
-	cout << "130/5" << endl;
+	std::cout << "130/5" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 130)
@@ -926,7 +928,7 @@ void testImages130(Mat* num1, Mat* num2, Mat* num3)
 	loadImage(&temp, path);
 	hconcat(help2, temp, help2);
 	vconcat(help1, help2, help1);
-	cout << "130/6" << endl;
+	std::cout << "130/6" << std::endl;
 	detectedNumber = testSelectedFunctions(&temp, num1, num2, num3);
 	numOfTests++;
 	if(detectedNumber == 130)
@@ -937,7 +939,7 @@ void testImages130(Mat* num1, Mat* num2, Mat* num3)
 	imshow("130", help1);
 }
 
-void testAll(Mat* num1, Mat* num2, Mat* num3)
+void testAll(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
 	testImageReferance(num1, num2, num3);
 	testImages15(num1, num2, num3);
@@ -953,6 +955,6 @@ void testAll(Mat* num1, Mat* num2, Mat* num3)
 	testImages120(num1, num2, num3);
 	testImages130(num1, num2, num3);
 
-	cout << "Tests: " << correctTests << "/" << numOfTests << endl;
+	std::cout << "Tests: " << correctTests << "/" << numOfTests << std::endl;
 }
 

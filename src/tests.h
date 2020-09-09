@@ -8,9 +8,7 @@
 #ifndef TESTS_H_
 #define TESTS_H_
 
-#include "img_prep.h"
-#include "img_work.h"
-#include "recognition.h"
+#include "opencv2/core.hpp"				//Mat
 
 //tests lines going through the image
 void testScan(cv::Mat in);

@@ -1,5 +1,4 @@
 src/img_work.o: ../src/img_work.cpp ../src/img_prep.h \
- /usr/local/include/opencv4/opencv2/highgui.hpp \
  /usr/local/include/opencv4/opencv2/core.hpp \
  /usr/local/include/opencv4/opencv2/core/cvdef.h \
  /usr/local/include/opencv4/opencv2/core/hal/interface.h \
@@ -26,17 +25,9 @@ src/img_work.o: ../src/img_work.cpp ../src/img_prep.h \
  /usr/local/include/opencv4/opencv2/core/utility.hpp \
  /usr/local/include/opencv4/opencv2/core/optim.hpp \
  /usr/local/include/opencv4/opencv2/core/ovx.hpp \
- /usr/local/include/opencv4/opencv2/core/cvdef.h \
- /usr/local/include/opencv4/opencv2/imgcodecs.hpp \
- /usr/local/include/opencv4/opencv2/videoio.hpp \
- /usr/local/include/opencv4/opencv2/imgproc.hpp \
- /usr/local/include/opencv4/opencv2/imgproc/types_c.h \
- /usr/local/include/opencv4/opencv2/core/core_c.h \
- /usr/local/include/opencv4/opencv2/core/types_c.h ../src/img_work.h
+ /usr/local/include/opencv4/opencv2/core/cvdef.h ../src/img_work.h
 
 ../src/img_prep.h:
-
-/usr/local/include/opencv4/opencv2/highgui.hpp:
 
 /usr/local/include/opencv4/opencv2/core.hpp:
 
@@ -91,17 +82,5 @@ src/img_work.o: ../src/img_work.cpp ../src/img_prep.h \
 /usr/local/include/opencv4/opencv2/core/ovx.hpp:
 
 /usr/local/include/opencv4/opencv2/core/cvdef.h:
-
-/usr/local/include/opencv4/opencv2/imgcodecs.hpp:
-
-/usr/local/include/opencv4/opencv2/videoio.hpp:
-
-/usr/local/include/opencv4/opencv2/imgproc.hpp:
-
-/usr/local/include/opencv4/opencv2/imgproc/types_c.h:
-
-/usr/local/include/opencv4/opencv2/core/core_c.h:
-
-/usr/local/include/opencv4/opencv2/core/types_c.h:
 
 ../src/img_work.h:
