@@ -49,4 +49,7 @@ int detectDigit(const cv::Mat* digit);
 //detects digits if they exist and returns the number they make
 int detectNumbers(const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* digit3);
 
+//sets the writeOutDigits flag for printing out separate digits
+void setWriteOutDigits(const bool val);
+
 #endif /* RECOGNITION_H_ */

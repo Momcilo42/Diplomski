@@ -63,6 +63,14 @@ int main( int argc, char** argv )
 		{
 			testAll(&digit1, &digit2, &digit3);
 		}
+		else if(!imageLocation.compare("-digits_on"))
+		{
+			setWriteOutDigits(true);
+		}
+		else if(!imageLocation.compare("-digits_off"))
+		{
+			setWriteOutDigits(false);
+		}
 		else
 		{
 			int retStatus = loadImage(&srcImage, imageLocation);

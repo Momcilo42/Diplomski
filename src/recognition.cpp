@@ -43,7 +43,7 @@ enum detection{
 	MULTIPLE_NUMBERS_DETECTED = -3
 };
 
-static const bool writeOutDigits = true;
+static bool writeOutDigits = true;
 
 static int digitToDetect = 0;
 
@@ -713,3 +713,14 @@ int detectNumbers(const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* d
 	return retNumber;
 }
 
+void setWriteOutDigits(const bool val)
+{
+	if(val)
+	{
+		writeOutDigits = true;
+	}
+	else
+	{
+		writeOutDigits = false;
+	}
+}
