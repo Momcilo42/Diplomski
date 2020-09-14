@@ -9,18 +9,6 @@
 #include "img_work.h"
 #include <algorithm>					//for swap
 
-enum retVal{
-	STATUS_OK = 0,
-	STATUS_UNABLE_TO_SEPARATE_NUMBERS = 3,
-	STATUS_MISSING_FIRST_NUMBER = 4,
-	STATUS_MISSING_SECOND_NUMBER = 5,
-	STATUS_MISSING_THIRD_NUMBER = 6,
-	STATUS_MISSING_FIRST_AND_SECOND_NUMBERS = 7,
-	STATUS_MISSING_FIRST_AND_THIRD_NUMBERS = 8,
-	STATUS_MISSING_SECOND_AND_THIRD_NUMBERS = 9,
-	STATUS_MISSING_ALL_NUMBERS = 10
-};
-
 static const int errorDetected = -1;
 
 void cropOutAlmostEmpty(cv::Mat* img)
@@ -198,7 +186,7 @@ void cropOutAlmostEmpty(cv::Mat* img)
     *img = std::move(cropped2);
 }
 
-void cropOutAlmostEmpty1(cv::Mat* img)
+void cropOutAlmostEmptyLeftmost1(cv::Mat* img)
 {
 	int pixelsInLine = 0;
 	int emptyLineCounter = 0;
@@ -427,7 +415,7 @@ void cropOutAlmostEmpty1(cv::Mat* img)
     *img = std::move(cropped2);
 }
 
-void cropOutAlmostEmpty0(cv::Mat* img)
+void cropOutAlmostEmptyRightmost0(cv::Mat* img)
 {
 	int pixelsInLine = 0;
 	int emptyLineCounter = 0;
@@ -841,11 +829,13 @@ void cutOffImageAboveAndBelowTheNumbers(cv::Mat* srcImage)
 	*srcImage = std::move(cropped);
 }
 
-int getDigits(cv::Mat* srcImage, cv::Mat* digit1, cv::Mat* digit2, cv::Mat* digit3)
+workDigitStatuses getDigits(cv::Mat* srcImage, cv::Mat* digit1, cv::Mat* digit2, cv::Mat* digit3)
 {
 	digit1->release();
 	digit2->release();
 	digit3->release();
+
+	workDigitStatuses retVal;
 
 	int left = srcImage->cols;
 	int right = 0;
@@ -864,7 +854,10 @@ int getDigits(cv::Mat* srcImage, cv::Mat* digit1, cv::Mat* digit2, cv::Mat* digi
 
 	if(linesBetweenDigits.first == errorDetected)
 	{
-		return STATUS_UNABLE_TO_SEPARATE_NUMBERS;
+		retVal.digit1 = STATUS_UNABLE_TO_SEPARATE_NUMBERS;
+		retVal.digit2 = STATUS_UNABLE_TO_SEPARATE_NUMBERS;
+		retVal.digit3 = STATUS_UNABLE_TO_SEPARATE_NUMBERS;
+		return retVal;
 	}
 	else
 	{
@@ -877,8 +870,6 @@ int getDigits(cv::Mat* srcImage, cv::Mat* digit1, cv::Mat* digit2, cv::Mat* digi
 			twoDigits = false;
 		}
 	}
-
-	int retVal = STATUS_OK;
 
 	if(twoDigits)//2 digits
 	{
@@ -919,18 +910,19 @@ int getDigits(cv::Mat* srcImage, cv::Mat* digit1, cv::Mat* digit2, cv::Mat* digi
 
 	    if(digit1->empty())
 	    {
-	    	if(digit2->empty())
-	    	{
-	    		retVal = STATUS_MISSING_ALL_NUMBERS;
-	    	}
-	    	else
-	    	{
-	    		retVal = STATUS_MISSING_FIRST_NUMBER;
-	    	}
+	    	retVal.digit1 = STATUS_MISSING_NUMBER;
 	    }
-	    else if(digit2->empty())
+	    else
 	    {
-	    	retVal = STATUS_MISSING_SECOND_NUMBER;
+	    	retVal.digit1 = STATUS_FOUND_NUMBER;
+	    }
+		if(digit2->empty())
+		{
+	    	retVal.digit2 = STATUS_MISSING_NUMBER;
+	    }
+	    else
+	    {
+	    	retVal.digit2 = STATUS_FOUND_NUMBER;
 	    }
 	}
 	else//3 digits
@@ -961,7 +953,7 @@ int getDigits(cv::Mat* srcImage, cv::Mat* digit1, cv::Mat* digit2, cv::Mat* digi
 		right = middleLeft;
 		left = leftSide -1;//to show the line
 		cv::Mat croppedLeft(*srcImage, cv::Rect(left,0,right-left,srcImage->rows));
-	    cropOutAlmostEmpty1(&croppedLeft);
+	    cropOutAlmostEmptyLeftmost1(&croppedLeft);
 	    *digit1 = std::move(croppedLeft);
 
 		//CENTER NUMBER
@@ -975,46 +967,32 @@ int getDigits(cv::Mat* srcImage, cv::Mat* digit1, cv::Mat* digit2, cv::Mat* digi
 		right = rightSide +1;//to show the line
 		left = middleRight;
 		cv::Mat croppedRight(*srcImage, cv::Rect(left,0,right-left,srcImage->rows));
-	    cropOutAlmostEmpty0(&croppedRight);
+	    cropOutAlmostEmptyRightmost0(&croppedRight);
 	    *digit3 = std::move(croppedRight);
 
-	    const int lowestAllowedDigitSize = 5;
-	    if(digit1->empty() || digit1->rows < lowestAllowedDigitSize || digit1->cols < lowestAllowedDigitSize)
-	    {
-	    	if(digit2->empty() || digit2->rows < lowestAllowedDigitSize || digit2->cols < lowestAllowedDigitSize)
-	    	{
-	    		if(digit3->empty() || digit3->rows < lowestAllowedDigitSize || digit3->cols < lowestAllowedDigitSize)
-	    		{
-	    			retVal = STATUS_MISSING_ALL_NUMBERS;
-	    		}
-	    		else
-	    		{
-	    			retVal = STATUS_MISSING_FIRST_AND_SECOND_NUMBERS;
-	    		}
-	    	}
-	    	else if(digit3->empty() || digit3->rows < lowestAllowedDigitSize || digit3->cols < lowestAllowedDigitSize)
-	    	{
-	    		retVal = STATUS_MISSING_FIRST_AND_THIRD_NUMBERS;
-	    	}
-	    	else
-	    	{
-	    		retVal = STATUS_MISSING_FIRST_NUMBER;
-	    	}
-	    }
-	    else if(digit2->empty() || digit3->rows < lowestAllowedDigitSize || digit3->cols < lowestAllowedDigitSize)
-	    {
-	    	if(digit3->empty() || digit3->rows < lowestAllowedDigitSize || digit3->cols < lowestAllowedDigitSize)
-			{
-				retVal = STATUS_MISSING_SECOND_AND_THIRD_NUMBERS;
-			}
-			else
-			{
-		    	retVal = STATUS_MISSING_SECOND_NUMBER;
-			}
-	    }
-	    else if(digit3->empty() || digit3->rows < lowestAllowedDigitSize || digit3->cols < lowestAllowedDigitSize)
+	    if(digit1->empty())
 		{
-			retVal = STATUS_MISSING_THIRD_NUMBER;
+			retVal.digit1 = STATUS_MISSING_NUMBER;
+		}
+		else
+		{
+			retVal.digit1 = STATUS_FOUND_NUMBER;
+		}
+		if(digit2->empty())
+		{
+			retVal.digit2 = STATUS_MISSING_NUMBER;
+		}
+		else
+		{
+			retVal.digit2 = STATUS_FOUND_NUMBER;
+		}
+		if(digit3->empty())
+		{
+			retVal.digit3 = STATUS_MISSING_NUMBER;
+		}
+		else
+		{
+			retVal.digit3 = STATUS_FOUND_NUMBER;
 		}
 	}
 

@@ -10,12 +10,6 @@
 #include "opencv2/imgproc.hpp"			//cvtcolor,blur,resize,gauss...
 #include "opencv2/imgproc/types_c.h"	//consts like COLOR_BGR2GRAY
 
-enum retStatus{
-	STATUS_OK = 0,
-	STATUS_FILE_OPEN_ERROR = 1,
-	STATUS_WRONG_SIZE_ERROR = 2
-};
-
 void increaseSaturation(cv::Mat* srcImage)
 {
 	const double alpha = 0.95; /**< Simple contrast control */
@@ -67,7 +61,7 @@ void CannyThreshold(cv::Mat* srcImage)
 	blackWhiteIfy(srcImage);
 }
 
-int readImage(cv::Mat* srcImage, cv::String readImagePath)
+loadStatus readImage(cv::Mat* srcImage, cv::String readImagePath)
 {
 	//tries to read the image from path into Mat variable
 	static const int lowerThreshold = 295;
@@ -89,9 +83,9 @@ int readImage(cv::Mat* srcImage, cv::String readImagePath)
 	return STATUS_OK;
 }
 
-int loadImage(cv::Mat* srcImage, cv::String readImagePath)
+loadStatus loadImage(cv::Mat* srcImage, cv::String readImagePath)
 {
-	int retVal = readImage(srcImage, readImagePath);
+	loadStatus retVal = readImage(srcImage, readImagePath);
 	if(retVal == STATUS_OK)
 	{
 		increaseSaturation(srcImage);

@@ -10,14 +10,26 @@
 
 #include "opencv2/core.hpp"				//Mat
 
+enum workStatus{
+	STATUS_FOUND_NUMBER = 0,
+	STATUS_MISSING_NUMBER = 1,
+	STATUS_UNABLE_TO_SEPARATE_NUMBERS = 2
+};
+
+struct workDigitStatuses{
+	workStatus digit1;
+	workStatus digit2;
+	workStatus digit3;
+};
+
 //crops out almost empty space around digit
 void cropOutAlmostEmpty(cv::Mat* img);
 
 //crops out almost empty space around leftmost 1
-void cropOutAlmostEmpty1(cv::Mat* img);
+void cropOutAlmostEmptyLeftmost1(cv::Mat* img);
 
 //crops out almost empty space around rightmost 0
-void cropOutAlmostEmpty0(cv::Mat* img);
+void cropOutAlmostEmptyRightmost0(cv::Mat* img);
 
 //detects inner edge of surrounding circle at given ratio of height
 std::pair<int,int>  innerCircleLeftRightEdgeDetection(const cv::Mat* in, float ratio);
@@ -37,6 +49,6 @@ std::pair<int,int> getLinesBetweenDigits(const cv::Mat* in);
 void cutOffImageAboveAndBelowTheNumbers(cv::Mat* srcImage);
 
 //returns detected digits
-int getDigits(cv::Mat* srcImage, cv::Mat* digit1, cv::Mat* digit2, cv::Mat* digit3);
+workDigitStatuses getDigits(cv::Mat* srcImage, cv::Mat* digit1, cv::Mat* digit2, cv::Mat* digit3);
 
 #endif /* IMG_WORK_H_ */

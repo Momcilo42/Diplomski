@@ -7,6 +7,7 @@ CPP_SRCS += \
 ../src/img_prep.cpp \
 ../src/img_work.cpp \
 ../src/main.cpp \
+../src/print.cpp \
 ../src/recognition.cpp \
 ../src/tests.cpp 
 
@@ -14,6 +15,7 @@ OBJS += \
 ./src/img_prep.o \
 ./src/img_work.o \
 ./src/main.o \
+./src/print.o \
 ./src/recognition.o \
 ./src/tests.o 
 
@@ -21,6 +23,7 @@ CPP_DEPS += \
 ./src/img_prep.d \
 ./src/img_work.d \
 ./src/main.d \
+./src/print.d \
 ./src/recognition.d \
 ./src/tests.d 
 

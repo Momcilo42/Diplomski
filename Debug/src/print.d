@@ -1,4 +1,4 @@
-src/main.o: ../src/main.cpp ../src/img_prep.h \
+src/print.o: ../src/print.cpp ../src/print.h ../src/img_prep.h \
  /usr/local/include/opencv4/opencv2/core.hpp \
  /usr/local/include/opencv4/opencv2/core/cvdef.h \
  /usr/local/include/opencv4/opencv2/core/hal/interface.h \
@@ -26,10 +26,9 @@ src/main.o: ../src/main.cpp ../src/img_prep.h \
  /usr/local/include/opencv4/opencv2/core/optim.hpp \
  /usr/local/include/opencv4/opencv2/core/ovx.hpp \
  /usr/local/include/opencv4/opencv2/core/cvdef.h ../src/img_work.h \
- ../src/recognition.h ../src/print.h ../src/tests.h \
- /usr/local/include/opencv4/opencv2/highgui.hpp \
- /usr/local/include/opencv4/opencv2/imgcodecs.hpp \
- /usr/local/include/opencv4/opencv2/videoio.hpp
+ ../src/recognition.h
+
+../src/print.h:
 
 ../src/img_prep.h:
 
@@ -90,13 +89,3 @@ src/main.o: ../src/main.cpp ../src/img_prep.h \
 ../src/img_work.h:
 
 ../src/recognition.h:
-
-../src/print.h:
-
-../src/tests.h:
-
-/usr/local/include/opencv4/opencv2/highgui.hpp:
-
-/usr/local/include/opencv4/opencv2/imgcodecs.hpp:
-
-/usr/local/include/opencv4/opencv2/videoio.hpp:

@@ -26,7 +26,7 @@ src/tests.o: ../src/tests.cpp ../src/tests.h \
  /usr/local/include/opencv4/opencv2/core/optim.hpp \
  /usr/local/include/opencv4/opencv2/core/ovx.hpp \
  /usr/local/include/opencv4/opencv2/core/cvdef.h ../src/img_prep.h \
- ../src/img_work.h ../src/recognition.h \
+ ../src/img_work.h ../src/recognition.h ../src/print.h \
  /usr/local/include/opencv4/opencv2/highgui.hpp \
  /usr/local/include/opencv4/opencv2/imgcodecs.hpp \
  /usr/local/include/opencv4/opencv2/videoio.hpp
@@ -92,6 +92,8 @@ src/tests.o: ../src/tests.cpp ../src/tests.h \
 ../src/img_work.h:
 
 ../src/recognition.h:
+
+../src/print.h:
 
 /usr/local/include/opencv4/opencv2/highgui.hpp:
 

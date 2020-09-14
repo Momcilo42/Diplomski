@@ -10,6 +10,12 @@
 
 #include "opencv2/core.hpp"				//Mat
 
+enum loadStatus{
+	STATUS_OK = 0,
+	STATUS_FILE_OPEN_ERROR = 1,
+	STATUS_WRONG_SIZE_ERROR = 2
+};
+
 //increases the saturation of the image
 void increaseSaturation(cv::Mat* srcImage);
 
@@ -20,10 +26,10 @@ void blackWhiteIfy(cv::Mat* srcImage);
 void CannyThreshold(cv::Mat* srcImage);
 
 //reads image from storage to memory
-int readImage(cv::Mat* srcImage, cv::String readImagePath);
+loadStatus readImage(cv::Mat* srcImage, cv::String readImagePath);
 
 //prepares the loaded image for further use
 //increases the saturation and draws out the edges
-int loadImage(cv::Mat* srcImage, cv::String readImagePath);
+loadStatus loadImage(cv::Mat* srcImage, cv::String readImagePath);
 
 #endif /* IMG_PREP_H_ */

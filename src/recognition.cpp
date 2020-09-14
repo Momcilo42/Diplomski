@@ -6,44 +6,7 @@
  */
 
 #include "recognition.h"
-#include <iostream>						//cout
 
-enum retStatus{
-	STATUS_WRONG_FIRST_DIGIT = -1,
-	STATUS_WRONG_SECOND_DIGIT = -2,
-	STATUS_WRONG_THIRD_DIGIT = -3,
-	STATUS_WRONG_FIRST_AND_SECOND_DIGITS = -4,
-	STATUS_WRONG_FIRST_AND_THIRD_DIGITS = -5,
-	STATUS_WRONG_SECOND_AND_THIRD_DIGITS = -6,
-	STATUS_WRONG_EVERY_DIGIT = -7,
-	STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT = -8,
-	STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT = -9,
-	STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_THIRD_DIGIT = -10,
-	STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_AND_SECOND_DIGITS = -11,
-	STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_AND_THIRD_DIGITS = -12,
-	STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_AND_THIRD_DIGITS = -13,
-	STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_EVERY_DIGIT = -14,
-	STATUS_WRONG_FIRST_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT = -15,
-	STATUS_WRONG_FIRST_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_THIRD_DIGIT = -16,
-	STATUS_WRONG_FIRST_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_AND_THIRD_DIGITS = -17,
-	STATUS_WRONG_SECOND_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT = -18,
-	STATUS_WRONG_SECOND_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_THIRD_DIGIT = -19,
-	STATUS_WRONG_SECOND_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_AND_THIRD_DIGITS = -20,
-	STATUS_WRONG_THIRD_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT = -21,
-	STATUS_WRONG_THIRD_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT = -22,
-	STATUS_WRONG_THIRD_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_AND_SECOND_DIGITS = -23,
-	STATUS_WRONG_FIRST_AND_SECOND_DIGITS_AND_MULTIPLE_NUMBERS_DETECTED_FOR_THIRD_DIGIT = -24,
-	STATUS_WRONG_FIRST_AND_THIRD_DIGITS_AND_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT = -25,
-	STATUS_WRONG_SECOND_AND_THIRD_DIGITS_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT = -26
-};
-
-enum detection{
-	NO_NUMBER_DETECTED = -1,
-	NUMBER_DETECTED = -2,
-	MULTIPLE_NUMBERS_DETECTED = -3
-};
-
-static bool writeOutDigits = true;
 
 static int digitToDetect = 0;
 
@@ -62,7 +25,7 @@ int countInArea(const cv::Mat* inputDigit, cv::Point p1, cv::Point p2)
 	return cv::countNonZero(cropped);;
 }
 
-int detect0(const cv::Mat* digit)
+detectionStatus detect0(const cv::Mat* digit)
 {
 	if(digit->rows*1.0 / digit->cols >= threshold1)
 	{
@@ -85,7 +48,7 @@ int detect0(const cv::Mat* digit)
 	}
 }
 
-int detect1(const cv::Mat* digit)
+detectionStatus detect1(const cv::Mat* digit)
 {
 	if(digit->rows*1.0 / digit->cols >= threshold1)
 	{
@@ -110,7 +73,7 @@ int detect1(const cv::Mat* digit)
 	}
 }
 
-int detect2(const cv::Mat* digit)
+detectionStatus detect2(const cv::Mat* digit)
 {
 	if(digit->rows*1.0 / digit->cols >= threshold1)
 	{
@@ -135,7 +98,7 @@ int detect2(const cv::Mat* digit)
 	}
 }
 
-int detect3(const cv::Mat* digit)
+detectionStatus detect3(const cv::Mat* digit)
 {
 	if(digit->rows*1.0 / digit->cols >= threshold1)
 	{
@@ -163,7 +126,7 @@ int detect3(const cv::Mat* digit)
 	}
 }
 
-int detect4(const cv::Mat* digit)
+detectionStatus detect4(const cv::Mat* digit)
 {
 	if(digit->rows*1.0 / digit->cols >= threshold1)
 	{
@@ -185,7 +148,7 @@ int detect4(const cv::Mat* digit)
 	}
 }
 
-int detect5(const cv::Mat* digit)
+detectionStatus detect5(const cv::Mat* digit)
 {
 	if(digit->rows*1.0 / digit->cols >= threshold1)
 	{
@@ -206,7 +169,7 @@ int detect5(const cv::Mat* digit)
 	}
 }
 
-int detect6(const cv::Mat* digit)
+detectionStatus detect6(const cv::Mat* digit)
 {
 	if(digit->rows*1.0 / digit->cols >= threshold1)
 	{
@@ -228,7 +191,7 @@ int detect6(const cv::Mat* digit)
 	}
 }
 
-int detect7(const cv::Mat* digit)
+detectionStatus detect7(const cv::Mat* digit)
 {
 	if(digit->rows*1.0 / digit->cols >= threshold1)
 	{
@@ -253,7 +216,7 @@ int detect7(const cv::Mat* digit)
 	}
 }
 
-int detect8(const cv::Mat* digit)
+detectionStatus detect8(const cv::Mat* digit)
 {
 	if(digit->rows*1.0 / digit->cols >= threshold1)
 	{
@@ -281,7 +244,7 @@ int detect8(const cv::Mat* digit)
 	}
 }
 
-int detect9(const cv::Mat* digit)
+detectionStatus detect9(const cv::Mat* digit)
 {
 	if(digit->rows*1.0 / digit->cols >= threshold1)
 	{
@@ -309,34 +272,34 @@ int detect9(const cv::Mat* digit)
 	}
 }
 
-int detectDigit(const cv::Mat* digit)
+detectedDigit detectDigit(const cv::Mat* digit)
 {
-	int detectedDigit = NO_NUMBER_DETECTED;
+	detectedDigit detected;
+	detected.number = NO_NUMBER_DETECTED;//-1
+	detected.status = NO_NUMBER_DETECTED;
+	detectionStatus tempStatus;
 	switch(digitToDetect)
 	{
 		case firstDigitOfThreeDigitNumber:
 		{
-			if(detect0(digit) == NUMBER_DETECTED)
+			tempStatus = detect0(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
-				{
-					std::cout << "0";
-				}
-				detectedDigit = 0;
+				detected.number = 0;
+				detected.status = NUMBER_DETECTED;
 			}
-			if(detect1(digit) == NUMBER_DETECTED)
+			tempStatus = detect1(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "1";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 1;
+					detected.number = 1;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 1;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
 
 			}
@@ -345,27 +308,24 @@ int detectDigit(const cv::Mat* digit)
 		case secondDigitOfTwoDigitNumber:
 		case thirdDigitOfThreeDigitNumber:
 		{
-			if(detect0(digit) == NUMBER_DETECTED)
+			tempStatus = detect0(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
-				{
-					std::cout << "0";
-				}
-				detectedDigit = 0;
+				detected.number = 0;
+				detected.status = NUMBER_DETECTED;
 			}
-			if(detect5(digit) == NUMBER_DETECTED)
+			tempStatus = detect5(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "5";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 5;
+					detected.number = 5;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 1;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
 			}
 		}
@@ -374,165 +334,158 @@ int detectDigit(const cv::Mat* digit)
 		case firstDigitOfTwoDigitNumber:
 		default:
 		{
-			if(detect0(digit) == NUMBER_DETECTED)
+			tempStatus = detect0(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
-				{
-					std::cout << "1";
-				}
-				detectedDigit = 0;
+				detected.number = 0;
+				detected.status = NUMBER_DETECTED;
 			}
-			if(detect1(digit) == NUMBER_DETECTED)
+			tempStatus = detect1(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "1";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 1;
+					detected.number = 1;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 1;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
+
 			}
-			if(detect2(digit) == NUMBER_DETECTED)
+			tempStatus = detect2(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "2";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 2;
+					detected.number = 2;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 2;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
+
 			}
-			if(detect3(digit) == NUMBER_DETECTED)
+			tempStatus = detect3(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "3";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 3;
+					detected.number = 3;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 3;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
+
 			}
-			if(detect4(digit) == NUMBER_DETECTED)
+			tempStatus = detect4(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "4";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 4;
+					detected.number = 4;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 4;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
+
 			}
-			if(detect5(digit) == NUMBER_DETECTED)
+			tempStatus = detect5(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "5";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 5;
+					detected.number = 5;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 5;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
+
 			}
-			if(detect6(digit) == NUMBER_DETECTED)
+			tempStatus = detect6(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "6";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 6;
+					detected.number = 6;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 6;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
+
 			}
-			if(detect7(digit) == NUMBER_DETECTED)
+			tempStatus = detect7(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "7";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 7;
+					detected.number = 7;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 7;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
+
 			}
-			if(detect8(digit) == NUMBER_DETECTED)
+			tempStatus = detect8(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "8";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 8;
+					detected.number = 8;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 8;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
+
 			}
-			if(detect9(digit) == NUMBER_DETECTED)
+			tempStatus = detect9(digit);
+			if(tempStatus == NUMBER_DETECTED)
 			{
-				if(writeOutDigits)
+				if(detected.number == NO_NUMBER_DETECTED)
 				{
-					std::cout << "9";
-				}
-				if(detectedDigit == NO_NUMBER_DETECTED)
-				{
-					detectedDigit = 9;
+					detected.number = 9;
+					detected.status = NUMBER_DETECTED;
 				}
 				else
 				{
-					detectedDigit = MULTIPLE_NUMBERS_DETECTED;
+					detected.number = detected.number*10 + 9;
+					detected.status = MULTIPLE_NUMBERS_DETECTED;
 				}
+
 			}
 		}
 	}
-	return detectedDigit;
+	return detected;
 }
 
-int detectNumbers(const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* digit3)
+detectedNumber detectNumbers(const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* digit3)
 {
-	int retNumber = 0;
-	int foundNumber = NO_NUMBER_DETECTED;
+	detectedNumber retNumber;
 
 	if(!digit1->empty())
 	{
-		if(writeOutDigits)
-		{
-			std::cout<<"Digit1=";
-		}
 		if(!digit3->empty())
 		{
 			digitToDetect = firstDigitOfThreeDigitNumber;//3 digit number
@@ -541,30 +494,10 @@ int detectNumbers(const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* d
 		{
 			digitToDetect = firstDigitOfTwoDigitNumber;//2 digit number
 		}
-		foundNumber = detectDigit(digit1);
-		if(foundNumber >= 0)//if any number is found
-		{
-			retNumber = foundNumber;
-		}
-		else if(foundNumber == NO_NUMBER_DETECTED)
-		{
-			retNumber = STATUS_WRONG_FIRST_DIGIT;
-		}
-		else if(foundNumber == MULTIPLE_NUMBERS_DETECTED)
-		{
-			retNumber = STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT;
-		}
-		if(writeOutDigits)
-		{
-			std::cout << std::endl;
-		}
+		retNumber.digit1 = detectDigit(digit1);
 	}
 	if(!digit2->empty())
 	{
-		if(writeOutDigits)
-		{
-			std::cout<<"Digit2=";
-		}
 		if(!digit3->empty())
 		{
 			digitToDetect = secondDigitOfThreeDigitNumber;//3 digit number
@@ -573,154 +506,14 @@ int detectNumbers(const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* d
 		{
 			digitToDetect = secondDigitOfTwoDigitNumber;//2 digit number
 		}
-		foundNumber = detectDigit(digit2);
-		if(foundNumber >= 0 && retNumber >=0)//if any number is found and the previous digit didn't have errors
-		{
-			retNumber = retNumber*10+foundNumber;
-		}
-		else if(foundNumber == NO_NUMBER_DETECTED)
-		{
-			if(retNumber >= 0)
-			{
-				retNumber = STATUS_WRONG_SECOND_DIGIT;
-			}
-			else if(retNumber == STATUS_WRONG_FIRST_DIGIT)
-			{
-				retNumber = STATUS_WRONG_FIRST_AND_SECOND_DIGITS;
-			}
-			else if(retNumber == STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT)
-			{
-				retNumber = STATUS_WRONG_SECOND_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT;
-			}
-		}
-		else if(foundNumber == MULTIPLE_NUMBERS_DETECTED)
-		{
-			if(retNumber >= 0)
-			{
-				retNumber = STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT;
-			}
-			else if(retNumber == STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT)
-			{
-				retNumber = STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_AND_SECOND_DIGITS;
-			}
-			else if(retNumber == STATUS_WRONG_FIRST_DIGIT)
-			{
-				retNumber = STATUS_WRONG_FIRST_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT;
-			}
-		}
-		if(writeOutDigits)
-		{
-			std::cout << std::endl;
-		}
+		retNumber.digit2 = detectDigit(digit2);
 	}
 	if(!digit3->empty())
 	{
-		if(writeOutDigits)
-		{
-			std::cout<<"Digit3=";
-		}
 		digitToDetect = thirdDigitOfThreeDigitNumber;
-		foundNumber = detectDigit(digit3);
-		if(foundNumber >= 0 && retNumber >=0)//if any number is found and the previous digit didn't have errors
-		{
-			retNumber = retNumber*10+foundNumber;
-		}
-		else if(foundNumber == NO_NUMBER_DETECTED)
-		{
-			if(retNumber >= 0)
-			{
-				retNumber = STATUS_WRONG_THIRD_DIGIT;
-			}
-			else if(retNumber == STATUS_WRONG_FIRST_DIGIT)
-			{
-				retNumber = STATUS_WRONG_FIRST_AND_THIRD_DIGITS;
-			}
-			else if(retNumber == STATUS_WRONG_SECOND_DIGIT)
-			{
-				retNumber = STATUS_WRONG_SECOND_AND_THIRD_DIGITS;
-			}
-			else if(retNumber == STATUS_WRONG_FIRST_AND_SECOND_DIGITS)
-			{
-				retNumber = STATUS_WRONG_EVERY_DIGIT;
-			}
-			else if(retNumber == STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT)
-			{
-				retNumber = STATUS_WRONG_THIRD_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT;
-			}
-			else if(retNumber == STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT)
-			{
-				retNumber = STATUS_WRONG_THIRD_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT;
-			}
-			else if(retNumber == STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_AND_SECOND_DIGITS)
-			{
-				retNumber = STATUS_WRONG_THIRD_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_AND_SECOND_DIGITS;
-			}
-			else if(retNumber == STATUS_WRONG_FIRST_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT)
-			{
-				retNumber = STATUS_WRONG_FIRST_AND_THIRD_DIGITS_AND_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT;
-			}
-			else if(retNumber == STATUS_WRONG_SECOND_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT)
-			{
-				retNumber = STATUS_WRONG_SECOND_AND_THIRD_DIGITS_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT;
-			}
-		}
-		else if(foundNumber == MULTIPLE_NUMBERS_DETECTED)
-		{
-			if(retNumber >= 0)
-			{
-				retNumber = STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_THIRD_DIGIT;
-			}
-			else if(retNumber == STATUS_WRONG_FIRST_DIGIT)
-			{
-				retNumber = STATUS_WRONG_FIRST_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_THIRD_DIGIT;
-			}
-			else if(retNumber == STATUS_WRONG_SECOND_DIGIT)
-			{
-				retNumber = STATUS_WRONG_SECOND_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_THIRD_DIGIT;
-			}
-			else if(retNumber == STATUS_WRONG_FIRST_AND_SECOND_DIGITS)
-			{
-				retNumber = STATUS_WRONG_FIRST_AND_SECOND_DIGITS_AND_MULTIPLE_NUMBERS_DETECTED_FOR_THIRD_DIGIT;
-			}
-			else if(retNumber == STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT)
-			{
-				retNumber = STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_AND_THIRD_DIGITS;
-			}
-			else if(retNumber == STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT)
-			{
-				retNumber = STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_AND_THIRD_DIGITS;
-			}
-			else if(retNumber == STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_AND_SECOND_DIGITS)
-			{
-				retNumber = STATUS_MULTIPLE_NUMBERS_DETECTED_FOR_EVERY_DIGIT;
-			}
-			else if(retNumber == STATUS_WRONG_SECOND_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_DIGIT)
-			{
-				retNumber = STATUS_WRONG_SECOND_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_FIRST_AND_THIRD_DIGITS;
-			}
-			else if(retNumber == STATUS_WRONG_FIRST_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_DIGIT)
-			{
-				retNumber = STATUS_WRONG_FIRST_DIGIT_AND_MULTIPLE_NUMBERS_DETECTED_FOR_SECOND_AND_THIRD_DIGITS;
-			}
-		}
-		if(writeOutDigits)
-		{
-			std::cout << std::endl;
-		}
+		retNumber.digit3 = detectDigit(digit3);
 	}
 
 	//the function either returns a detected number or an error code
 	return retNumber;
-}
-
-void setWriteOutDigits(const bool val)
-{
-	if(val)
-	{
-		writeOutDigits = true;
-	}
-	else
-	{
-		writeOutDigits = false;
-	}
 }

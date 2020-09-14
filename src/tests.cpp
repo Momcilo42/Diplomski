@@ -9,16 +9,37 @@
 #include "img_prep.h"
 #include "img_work.h"
 #include "recognition.h"
-#include <iostream>						//cout
+#include "print.h"
 #include "opencv2/highgui.hpp"			//imshow
 
 static int numOfTests = 0;
 static int correctTests = 0;
 
+static bool writeable = true;
+
 int testSelectedFunctions(cv::Mat* inp, cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
 	getDigits(inp, num1, num2, num3);
-	return detectNumbers(num1, num2, num3);
+	detectedNumber detNum = detectNumbers(num1, num2, num3);
+	int ret = 0;
+	if(detNum.digit1.status == NUMBER_DETECTED)
+	{
+		ret = detNum.digit1.number;
+	}
+	if(detNum.digit2.status == NUMBER_DETECTED)
+	{
+		ret = ret*10 + detNum.digit2.number;
+	}
+	if(detNum.digit3.status == NUMBER_DETECTED)
+	{
+		ret = ret*10 + detNum.digit3.number;
+	}
+
+	printOutDigits(&detNum, writeable);
+
+	printOutFullNumber(&detNum, num1, num2, num3);
+
+	return ret;
 }
 
 void testImageReferance(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
@@ -939,8 +960,9 @@ void testImages130(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 	imshow("130", help1);
 }
 
-void testAll(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
+void testAll(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3, const bool toWrite)
 {
+	writeable = toWrite;
 	testImageReferance(num1, num2, num3);
 	testImages15(num1, num2, num3);
 	testImages25(num1, num2, num3);
