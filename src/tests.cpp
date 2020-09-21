@@ -9,13 +9,14 @@
 #include "img_prep.h"
 #include "img_work.h"
 #include "recognition.h"
-#include "print.h"
 #include "opencv2/highgui.hpp"			//imshow
+#include "print_functions.h"
 
 static int numOfTests = 0;
 static int correctTests = 0;
 
 static bool writeable = true;
+static bool color = false;
 
 int testSelectedFunctions(cv::Mat* inp, cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 {
@@ -37,7 +38,7 @@ int testSelectedFunctions(cv::Mat* inp, cv::Mat* num1, cv::Mat* num2, cv::Mat* n
 
 	printOutDigits(&detNum, writeable);
 
-	printOutFullNumber(&detNum, num1, num2, num3);
+	printOutFullNumber(&detNum, num1, num2, num3, color);
 
 	return ret;
 }
@@ -960,9 +961,10 @@ void testImages130(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3)
 	imshow("130", help1);
 }
 
-void testAll(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3, const bool toWrite)
+void testAll(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3, const bool toWrite, const bool colorFlag)
 {
 	writeable = toWrite;
+	color = colorFlag;
 	testImageReferance(num1, num2, num3);
 	testImages15(num1, num2, num3);
 	testImages25(num1, num2, num3);

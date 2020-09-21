@@ -5,7 +5,7 @@
  *      Author: momcilo
  */
 
-#include "print.h"
+#include "print_functions.h"
 
 void writeOutLoadErrors(const loadStatus* retLoadStatus, const cv::String* imageLocation)
 {
@@ -92,7 +92,7 @@ void printOutDigits(const detectedNumber* digits, const bool toWrite)
 	}
 }
 
-void printOutFullNumber(const detectedNumber* digits, const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* digit3)
+void printOutFullNumber(const detectedNumber* digits, const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* digit3, const bool color)
 {
 	int number = 0;
 	if((!digit1->empty() && digits->digit1.status != NUMBER_DETECTED)
@@ -113,6 +113,13 @@ void printOutFullNumber(const detectedNumber* digits, const cv::Mat* digit1, con
 	{
 		number = number*10 + digits->digit3.number;
 	}
-	std::cout << "Detected number = " << number << std::endl;
+	if(color)
+	{
+		std::cout << "Detected number = " << "\033[7;37m" << number << "\033[0m" << std::endl;
+	}
+	else
+	{
+		std::cout << "Detected number = " << number << std::endl;
+	}
 }
 

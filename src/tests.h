@@ -26,6 +26,6 @@ void test80Lines(cv::Mat in);
 int testSelectedFunctions(cv::Mat* inp, cv::Mat* num1, cv::Mat* num2, cv::Mat* num3);
 
 //tests 65 preselected images to speed up testing
-void testAll(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3, const bool toWrite);
+void testAll(cv::Mat* num1, cv::Mat* num2, cv::Mat* num3, const bool toWrite, const bool colorFlag);
 
 #endif /* TESTS_H_ */

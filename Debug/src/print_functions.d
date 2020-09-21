@@ -1,4 +1,5 @@
-src/print.o: ../src/print.cpp ../src/print.h ../src/img_prep.h \
+src/print_functions.o: ../src/print_functions.cpp \
+ ../src/print_functions.h ../src/img_prep.h \
  /usr/local/include/opencv4/opencv2/core.hpp \
  /usr/local/include/opencv4/opencv2/core/cvdef.h \
  /usr/local/include/opencv4/opencv2/core/hal/interface.h \
@@ -28,7 +29,7 @@ src/print.o: ../src/print.cpp ../src/print.h ../src/img_prep.h \
  /usr/local/include/opencv4/opencv2/core/cvdef.h ../src/img_work.h \
  ../src/recognition.h
 
-../src/print.h:
+../src/print_functions.h:
 
 ../src/img_prep.h:
 

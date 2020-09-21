@@ -1,9 +1,9 @@
 #include "img_prep.h"
 #include "img_work.h"
 #include "recognition.h"
-#include "print.h"
 #include "tests.h"
 #include "opencv2/highgui.hpp"			//imshow
+#include "print_functions.h"
 
 cv::Mat srcImage;
 cv::Mat digit1;
@@ -11,6 +11,7 @@ cv::Mat digit2;
 cv::Mat digit3;
 
 static bool writeOutDigits = true;
+static bool colorText = false;
 
 int main( int argc, char** argv )
 {
@@ -22,7 +23,7 @@ int main( int argc, char** argv )
 		std::cout << imageLocation << std::endl;
 		if(!imageLocation.compare("-test"))
 		{
-			testAll(&digit1, &digit2, &digit3, writeOutDigits);
+			testAll(&digit1, &digit2, &digit3, writeOutDigits, colorText);
 		}
 		else if(!imageLocation.compare("-digits_on"))
 		{
@@ -31,6 +32,14 @@ int main( int argc, char** argv )
 		else if(!imageLocation.compare("-digits_off"))
 		{
 			writeOutDigits = false;
+		}
+		else if(!imageLocation.compare("-color_on"))
+		{
+			colorText = true;
+		}
+		else if(!imageLocation.compare("-color_off"))
+		{
+			colorText = false;
 		}
 		else
 		{
@@ -52,7 +61,7 @@ int main( int argc, char** argv )
 					printOutDigits(&retDetectedNumber, writeOutDigits);
 				}
 
-				printOutFullNumber(&retDetectedNumber, &digit1, &digit2, &digit3);
+				printOutFullNumber(&retDetectedNumber, &digit1, &digit2, &digit3, colorText);
 
 				imshow(imageLocation, srcImage);
 				if(!digit1.empty())

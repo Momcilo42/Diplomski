@@ -5,8 +5,8 @@
  *      Author: momcilo
  */
 
-#ifndef PRINT_H_
-#define PRINT_H_
+#ifndef PRINT_FUNCTIONS_H_
+#define PRINT_FUNCTIONS_H_
 
 #include "img_prep.h"					//loadStatus
 #include "img_work.h"					//workDigitStatuses
@@ -21,6 +21,6 @@ void writeOutDetectedErrors(const detectedNumber* retDetectedNumber);
 
 void printOutDigits(const detectedNumber* digits, const bool toWrite);
 
-void printOutFullNumber(const detectedNumber* digits, const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* digit3);
+void printOutFullNumber(const detectedNumber* digits, const cv::Mat* digit1, const cv::Mat* digit2, const cv::Mat* digit3, const bool color);
 
-#endif /* PRINT_H_ */
+#endif /* PRINT_FUNCTIONS_H_ */
